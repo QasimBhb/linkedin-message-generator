@@ -21,18 +21,28 @@ reviews/edits before sending. See `ARCHITECTURE.md` and `DECISIONS.md`.
 - `tsc --noEmit` clean · `eslint .` clean · `npm run build` produces a loadable `dist/`.
 - Committed on `main` (`62070b1`).
 
-## Not verified yet ⬜ (next session)
-**Manual browser test has not been run.** Load `dist/` unpacked and walk the checklist in
-`ARCHITECTURE.md` → Verification. Expect the scraper selectors to need tuning — LinkedIn's DOM
-changes often and the current selectors are a best guess, not observed-and-confirmed.
+## Verified in the browser ✅ (2026-07-11)
+End-to-end works on a live profile: scrape -> angle -> LLM -> message in the popup.
 
-Known likely issues to watch for:
-- **SPA navigation**: content scripts inject on page load. Navigating feed -> profile without a
-  reload may leave the tab with no content script, so `SCRAPE_PROFILE` fails with a connection
-  error. Workaround: hard-reload the profile page. Real fix: fallback inject via
-  `chrome.scripting.executeScript` from the popup.
-- Scraper field mapping (`currentTitle`/`currentCompany` come from the first experience entry;
-  about/skills selectors are anchor-based and may miss).
+Two bugs found and fixed during that first real test:
+1. **"Receiving end does not exist"** — content scripts only inject on a real page load, so a tab
+   already open (or reached via LinkedIn's client-side routing) had no listener. `scrapeProfile()`
+   now catches that, injects the content script with `chrome.scripting`, and retries once.
+2. **Scraper matched nothing.** LinkedIn redesigned the profile page: hashed class names, name in
+   an `h2` (not `h1`), `#about`/`#experience` anchors replaced by random UUIDs, no more
+   `aria-hidden` text spans, and Experience/Education/Skills absent from the DOM until **`<main>`**
+   (the real scroll container — *not* the window) is scrolled. Scraper now scrolls `<main>`, finds
+   sections by `<h2>` heading text, and parses `innerText` lines.
+
+**The scraper is inherently fragile** — it depends on LinkedIn's rendered text layout, because the
+markup carries no stable hooks. Expect it to break again on their next redesign. `scripts/probe.mjs`
+is the tool for re-deriving selectors when it does.
+
+## Dev harness
+`node scripts/launch-browser.mjs` boots headed Chromium with `dist/` loaded as an unpacked
+extension and a persistent profile in `.dev-profile/` (LinkedIn login survives restarts), exposing
+CDP on `:9222`. `node scripts/probe.mjs` attaches to it and runs a real `SCRAPE_PROFILE` through
+the extension's service worker, printing the resulting `Profile`.
 
 ## How to resume
 ```bash
@@ -45,6 +55,6 @@ Then `chrome://extensions` -> Developer mode -> Load unpacked -> pick `dist/`.
 ## Open follow-ups
 - Provide exact tone/style text -> options "tone" field.
 - Replace placeholder icons.
-- GitHub: create **public** repo + push **after** first working browser test (decided).
+- GitHub: create **public** repo + push. The gating condition (a working browser test) is now met.
 - 2 npm audit warnings in transitive build deps — defer, not runtime.
 - Optional later: unit tests for `prompt.ts` / `providers.ts` parsing; Web Store zip script.
