@@ -21,10 +21,14 @@ export function buildPrompt(
   return [
     head,
     '',
-    'Use this scraped LinkedIn profile data as context. Only use facts present here; do not invent details:',
+    'Use this scraped LinkedIn profile data as context:',
     '```json',
     context,
     '```',
+    '',
+    'Every specific claim you make about this person must be traceable to a field above. Do not',
+    'invent employers, dates, achievements, mutual connections, or shared interests. If a detail',
+    'is null or absent, do not refer to it — write around it rather than guessing.',
     '',
     'Return only the message text, ready to paste. No preamble, no quotes, no explanation.',
   ].join('\n');

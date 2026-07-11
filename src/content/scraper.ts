@@ -1,4 +1,5 @@
 import type { ContentRequest, ContentResponse } from '../lib/messages';
+import { checkProfile, profileErrorMessage } from '../lib/profile';
 import type { Education, Experience, Profile } from '../lib/types';
 
 const ABOUT_MAX = 1500;
@@ -239,12 +240,9 @@ chrome.runtime.onMessage.addListener(
 
     void scrapeProfileFromDom()
       .then((profile) => {
-        if (!profile.name) {
-          sendResponse({
-            ok: false,
-            error:
-              'Could not read this profile. Make sure the page has finished loading, then try again.',
-          });
+        const check = checkProfile(profile);
+        if (!check.ok) {
+          sendResponse({ ok: false, error: profileErrorMessage(check.missing) });
           return;
         }
         sendResponse({ ok: true, profile });
