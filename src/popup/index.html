@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LinkedIn Message Generator</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <div class="popup">
+      <header class="popup__header">
+        <h1 class="popup__title">Message Generator</h1>
+        <span id="provider-label" class="popup__provider"></span>
+      </header>
+
+      <div id="guard" class="guard hidden">
+        <p>
+          Open a LinkedIn profile page (linkedin.com/in/...) to generate a
+          message.
+        </p>
+      </div>
+
+      <main id="main" class="popup__body">
+        <label class="field">
+          <span class="field__label">Angle</span>
+          <select id="angle-select" class="field__control"></select>
+        </label>
+
+        <button id="generate-btn" type="button" class="btn btn--primary">
+          Generate
+        </button>
+
+        <div id="debug-line" class="debug-line hidden">
+          <button id="debug-toggle" type="button" class="debug-line__toggle">
+            Scraped profile ▸
+          </button>
+          <div id="debug-content" class="debug-line__content hidden"></div>
+        </div>
+
+        <div id="error-area" class="error-area hidden" role="alert"></div>
+
+        <label class="field">
+          <span class="field__label">Message</span>
+          <textarea
+            id="result-textarea"
+            class="field__control result-textarea"
+            rows="8"
+            placeholder="Generated message will appear here..."
+          ></textarea>
+        </label>
+
+        <div class="actions">
+          <button
+            id="copy-btn"
+            type="button"
+            class="btn btn--secondary"
+            disabled
+          >
+            Copy
+          </button>
+          <span id="copy-feedback" class="copy-feedback hidden">Copied!</span>
+        </div>
+      </main>
+
+      <footer class="popup__footer">
+        <button id="options-link" type="button" class="link-btn">
+          Options
+        </button>
+      </footer>
+    </div>
+    <script type="module" src="./popup.ts"></script>
+  </body>
+</html>

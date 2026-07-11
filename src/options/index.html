@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LinkedIn Message Generator — Options</title>
+    <link rel="stylesheet" href="./options.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="page__header">
+        <h1>LinkedIn Message Generator</h1>
+        <p class="page__subtitle">Settings</p>
+      </header>
+
+      <section class="card">
+        <h2>Provider</h2>
+        <div class="radio-group">
+          <label class="radio">
+            <input
+              type="radio"
+              name="provider"
+              value="gemini"
+              id="provider-gemini"
+            />
+            Gemini
+          </label>
+          <label class="radio">
+            <input
+              type="radio"
+              name="provider"
+              value="deepseek"
+              id="provider-deepseek"
+            />
+            DeepSeek
+          </label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>API Keys</h2>
+        <label class="field">
+          <span class="field__label">Gemini API key</span>
+          <input
+            type="password"
+            id="gemini-key"
+            class="field__control"
+            autocomplete="off"
+          />
+        </label>
+        <label class="field">
+          <span class="field__label">DeepSeek API key</span>
+          <input
+            type="password"
+            id="deepseek-key"
+            class="field__control"
+            autocomplete="off"
+          />
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>Model overrides</h2>
+        <label class="field">
+          <span class="field__label">Gemini model</span>
+          <input type="text" id="gemini-model" class="field__control" />
+        </label>
+        <label class="field">
+          <span class="field__label">DeepSeek model</span>
+          <input type="text" id="deepseek-model" class="field__control" />
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>Tone</h2>
+        <label class="field">
+          <span class="field__label"
+            >Describe the tone/style used to generate messages</span
+          >
+          <textarea id="tone" class="field__control" rows="3"></textarea>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>Angles</h2>
+        <div id="angle-list" class="angle-list"></div>
+        <button id="add-angle-btn" type="button" class="btn btn--secondary">
+          Add angle
+        </button>
+      </section>
+
+      <section class="actions-row">
+        <button id="save-btn" type="button" class="btn btn--primary">
+          Save
+        </button>
+        <button id="reset-btn" type="button" class="btn btn--secondary">
+          Reset to defaults
+        </button>
+        <span id="save-feedback" class="save-feedback hidden">Saved</span>
+      </section>
+
+      <div id="error-area" class="error-area hidden" role="alert"></div>
+
+      <footer class="disclaimer">
+        Profile data is sent to the selected LLM provider to generate your
+        message. API keys are stored locally in this browser and never leave it
+        except in requests to that provider.
+      </footer>
+    </div>
+    <script type="module" src="./options.ts"></script>
+  </body>
+</html>
